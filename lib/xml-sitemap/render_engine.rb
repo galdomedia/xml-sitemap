@@ -51,9 +51,9 @@ module XmlSitemap
                 end
               end
 
-              u.lastmod    item.lastmod_value
-              u.changefreq item.changefreq.to_s
-              u.priority   item.priority.to_s
+              u.lastmod    item.lastmod_value unless item.lastmod_value === false
+              u.changefreq item.changefreq.to_s unless item.changefreq === false
+              u.priority   item.priority.to_s unless item.priority === false
             end
           end
         }
@@ -108,9 +108,9 @@ module XmlSitemap
               end
             end
 
-            u.lastmod    item.lastmod_value
-            u.changefreq item.changefreq.to_s
-            u.priority   item.priority.to_s
+            u.lastmod    item.lastmod_value unless item.lastmod_value === false
+            u.changefreq item.changefreq.to_s unless item.changefreq === false
+            u.priority   item.priority.to_s unless item.priority === false
           end
         end
       }.to_s
@@ -168,9 +168,9 @@ module XmlSitemap
           item_string << "    </video:video>\n"
         end
 
-        item_string << "    <lastmod>#{item.lastmod_value}</lastmod>\n"
-        item_string << "    <changefreq>#{item.changefreq}</changefreq>\n"
-        item_string << "    <priority>#{item.priority}</priority>\n"
+        item_string << "    <lastmod>#{item.lastmod_value}</lastmod>\n" unless item.lastmod_value === false
+        item_string << "    <changefreq>#{item.changefreq}</changefreq>\n" unless item.changefreq === false
+        item_string << "    <priority>#{item.priority}</priority>\n" unless item.priority === false
         item_string << "  </url>\n"
 
         item_results << item_string

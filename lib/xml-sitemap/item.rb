@@ -12,9 +12,9 @@ module XmlSitemap
                 
     def initialize(target, opts={})
       @target            = target.to_s.strip
-      @updated           = opts[:updated]  || Time.now
-      @priority          = opts[:priority] || DEFAULT_PRIORITY
-      @changefreq        = opts[:period]   || :weekly
+      @updated           = opts.key?(:updated) ? opts[:updated] : Time.now
+      @priority          = opts.key?(:priority) ? opts[:priority] : DEFAULT_PRIORITY
+      @changefreq        = opts.key?(:period) ? opts[:period] : :weekly
       @validate_time     = (opts[:validate_time] != false)
 
       # Refer to http://support.google.com/webmasters/bin/answer.py?hl=en&answer=178636 for requirement to support images in sitemap
@@ -46,12 +46,12 @@ module XmlSitemap
       @video_platform               = opts[:video_platform]
       @video_live                   = opts[:video_live]
 
-      @changefreq = @changefreq.to_sym
-      unless XmlSitemap::PERIODS.include?(@changefreq)
+      @changefreq = @changefreq.to_sym unless @changefreq === false
+      unless @changefreq === false || XmlSitemap::PERIODS.include?(@changefreq)
         raise ArgumentError, "Invalid :period value '#{@changefreq}'"
       end
 
-      unless @updated.kind_of?(Time) || @updated.kind_of?(Date) || @updated.kind_of?(String)
+      unless @updated === false || @updated.kind_of?(Time) || @updated.kind_of?(Date) || @updated.kind_of?(String)
         raise ArgumentError, "Time, Date, or ISO8601 String required for :updated!"
       end
 
@@ -91,7 +91,9 @@ module XmlSitemap
     # Returns the timestamp value of lastmod for renderer
     #
     def lastmod_value
-      if @updated.kind_of?(Time)
+      if @updated === false
+        false
+      elsif @updated.kind_of?(Time)
         @updated.utc.iso8601
       else
         @updated.to_s
